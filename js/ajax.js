@@ -15,10 +15,12 @@ $(document).ready(function() {
   var newsDescription = $('<div>', {class: "news-des"});
   var timeText = $('<div>', {class: "time-text"}).append($('<strong>'));
 
-
   var card = $('<div>', {class: "card"});
-  var url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/1.json';
 
+  var baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
+  var section = 'all-sections';
+  var timeperiod = 1;
+  var url = baseurl + section + '/' + timeperiod + '.json';
   url += '?' + $.param({
     'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
   });
@@ -94,7 +96,30 @@ $(document).ready(function() {
     });
   }
 
-  function politics(articles) {
-    
+  // preparing url for sports section
+  baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
+  section = 'sports';
+  timeperiod = 1;
+  url = baseurl + section + '/' + timeperiod + '.json';
+  url += '?' + $.param({
+    'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
+  });
+
+  // reading NYTimes API
+  $.ajax({
+    url: url,
+    method: 'GET'
+  }).done(function(response){
+    // insert results to DOM
+    sports(response.results);
+    // console.log(response.results);
+  }).fail(function(error){
+    console.log(error);
+  })
+
+  function sports(articles) {
+    $.each(articles, function(key, value) {
+      console.log(value);
+    })
   }
 });
