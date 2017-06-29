@@ -66,14 +66,21 @@ $(document).ready(function() {
         }
 
         // make new instance of carousel item
-        carouselItem = $('<div>', {class: "carousel-item"});
+        if (key === cards.length + 1) {
+          carouselItem = $('<div>', {class: "carousel-item active"});
+        } else {
+          carouselItem = $('<div>', {class: "carousel-item"});
+        }
+
         newsBlock = $('<div>', {class: "news-block"});
         newsMedia = $('<div>', {class: "news-media"});
         newsMedia.append($('<img>', {class: "img-fluid", src: imageSrc}));
         newsTitle = $('<div>', {class: "news-title"});
-        newsTitle.append($('<h2>', {class: "title-large"})).append($('<a>', {href: articleSrc})).text(articles[key].title);
+        newsTitle.append($('<h2>', {class: "title-large"})).append($('<a>', {href: articleSrc}));
+        newsTitle.find('a').text(articles[key].title);
         newsDescription = $('<div>', {class: "news-des"}).text(articles[key].abstract);
-        timeText = $('<div>', {class: "time-text"}).append($('<strong>').text(articles[key].published_date));
+        timeText = $('<div>', {class: "time-text"}).append($('<strong>'));
+        timeText.children().text(articles[key].published_date);
 
         newsBlock.append(newsMedia);
         newsBlock.append(newsTitle);
@@ -85,5 +92,9 @@ $(document).ready(function() {
       }
 
     });
+  }
+
+  function politics(articles) {
+    
   }
 });
