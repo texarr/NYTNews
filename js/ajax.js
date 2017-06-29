@@ -1,18 +1,19 @@
 $(document).ready(function() {
+  var articleSrc = '#';
+  var imageSrc = '#';
   var firstSectionContainer = $('.banner-sec').find('.container').find('.row');
   var cards = firstSectionContainer.find('.card');
   var topCarousel = $('#carousel-example-generic');
   var carouselItem = $('<div>', {class: "carousel-item"});
-  var articleSrc = '#';
 
   // news container
   var newsBlock = $('<div>', {class: "news-block"});
 
   // news elements
   var newsMedia = $('<div>', {class: "news-media"});
-  newsMedia.append($('<img>', {class: "img-fluid", src: articleSrc}));
-
-  // var newsTitle = $('<div>', {class: "news-title"})
+  var newsTitle = $('<div>', {class: "news-title"});
+  var newsDescription = $('<div>', {class: "news-des"});
+  var timeText = $('<div>', {class: "time-text"}).append($('<strong>'));
 
 
   var card = $('<div>', {class: "card"});
@@ -55,7 +56,32 @@ $(document).ready(function() {
 
       // carousel fill
       if (key >= cards.length) {
-        // console.log(topCarousel.find('.carousel-inner'));
+        articleSrc = articles[key].url;
+
+        // saving image if media exists
+        if (articles[key].media["0"]) {
+          imageSrc = articles[key].media["0"]["media-metadata"]["0"].url;
+        } else {
+          imageSrc = ' ';
+        }
+
+        // make new instance of carousel item
+        carouselItem = $('<div>', {class: "carousel-item"});
+        newsBlock = $('<div>', {class: "news-block"});
+        newsMedia = $('<div>', {class: "news-media"});
+        newsMedia.append($('<img>', {class: "img-fluid", src: imageSrc}));
+        newsTitle = $('<div>', {class: "news-title"});
+        newsTitle.append($('<h2>', {class: "title-large"})).append($('<a>', {href: articleSrc})).text(articles[key].title);
+        newsDescription = $('<div>', {class: "news-des"}).text(articles[key].abstract);
+        timeText = $('<div>', {class: "time-text"}).append($('<strong>').text(articles[key].published_date));
+
+        newsBlock.append(newsMedia);
+        newsBlock.append(newsTitle);
+        newsBlock.append(newsDescription);
+        newsBlock.append(timeText);
+        carouselItem.append(newsBlock);
+
+        topCarousel.find('.carousel-inner').append(carouselItem);
       }
 
     });
