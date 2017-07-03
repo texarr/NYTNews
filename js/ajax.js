@@ -21,6 +21,9 @@ $(document).ready(function() {
   var sportsContainer = $('.sports');
   var sportsCards = sportsContainer.find('.card');
 
+  // international section variables
+  var internationalContainer = $('.international');
+  var internationalCards = internationalContainer.find('.card');
 
   var baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
   var section = 'all-sections';
@@ -51,7 +54,7 @@ $(document).ready(function() {
 
         // loading image if media exists
         if (articles[key].media["0"]) {
-          $(cards[key]).find('img')["0"].src = articles[key].media["0"]["media-metadata"]["0"].url;
+          $(cards[key]).find('img')["0"].src = articles[key].media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
         } else {
           $(cards[key]).find('img')["0"].src =  " ";
         }
@@ -68,7 +71,7 @@ $(document).ready(function() {
 
         // saving image if media exists
         if (articles[key].media["0"]) {
-          imageSrc = articles[key].media["0"]["media-metadata"]["0"].url;
+          imageSrc = articles[key].media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
         } else {
           imageSrc = ' ';
         }
@@ -131,7 +134,7 @@ $(document).ready(function() {
             if (value.media["0"]) {
                 $(sportsCards[key]).find('.img-fluid')["0"].src = value.media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
             }
-
+-
             // loading title
             // link
             $(sportsCards[key]).find('.news-title').find('a').attr('href', value.url);
@@ -145,4 +148,48 @@ $(document).ready(function() {
         }
     })
   }
+
+
+  // preparing url for international section
+  baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
+  section = 'World';
+  timeperiod = 1;
+  url = baseurl + section + '/' + timeperiod + '.json';
+  url += '?' + $.param({
+    'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
+  });
+
+    // reading NYTimes API for sports section
+    $.ajax({
+    url: url,
+    method: 'GET'
+    }).done(function(response){
+    // insert results to DOM
+    world(response.results);
+    // console.log(response.results);
+    }).fail(function(error){
+    console.log(error);
+    })
+
+    function world(articles) {
+        $.each(articles, function(key, value) {
+            if (key < internationalCards.length) {
+                // loading image if media exists
+                if (value.media["0"]) {
+                    $(internationalCards[key]).find('.img-fluid')["0"].src = value.media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
+                }
+
+                // loading title
+                // link
+                $(internationalCards[key]).find('.news-title').find('a').attr('href', value.url);
+                // title
+                $(internationalCards[key]).find('.news-title').find('.title-small').text(value.title);
+
+                // loading description
+                $(internationalCards[key]).find('.card-text').eq(0).text(value.abstract);
+                // time
+                $(internationalCards[key]).find('.card-text').find('em').text(value.published_date);
+            }
+        });
+    }
 });
