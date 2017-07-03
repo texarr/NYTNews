@@ -17,10 +17,16 @@ $(document).ready(function() {
 
   var card = $('<div>', {class: "card"});
 
+  // sports section variables
+  var sportsContainer = $('.sports');
+  var sportsCards = sportsContainer.find('.card');
+
+
   var baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
   var section = 'all-sections';
   var timeperiod = 1;
   var url = baseurl + section + '/' + timeperiod + '.json';
+
   url += '?' + $.param({
     'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
   });
@@ -105,7 +111,7 @@ $(document).ready(function() {
     'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
   });
 
-  // reading NYTimes API
+  // reading NYTimes API for sports section
   $.ajax({
     url: url,
     method: 'GET'
@@ -119,7 +125,24 @@ $(document).ready(function() {
 
   function sports(articles) {
     $.each(articles, function(key, value) {
-      console.log(value);
+        // preparing cards for first section
+        if (key < sportsCards.length) {
+            // loading image if media exists
+            if (value.media["0"]) {
+                $(sportsCards[key]).find('.img-fluid')["0"].src = value.media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
+            }
+
+            // loading title
+            // link
+            $(sportsCards[key]).find('.news-title').find('a').attr('href', value.url);
+            // title
+            $(sportsCards[key]).find('.news-title').find('.title-small').text(value.title);
+
+            // loading description
+            $(sportsCards[key]).find('.card-text').eq(0).text(value.abstract);
+            // time
+            $(sportsCards[key]).find('.card-text').find('em').text(value.published_date);
+        }
     })
   }
 });
