@@ -25,32 +25,20 @@ $(document).ready(function() {
   var internationalContainer = $('.international');
   var internationalCards = internationalContainer.find('.card');
 
-  var baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
-  var section = 'all-sections';
-  var timeperiod = 30;
-  var url = baseurl + section + '/' + timeperiod + '.json';
-
-  url += '?' + $.param({
-    'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
-  });
-
-  // reading NYTimes API
-  $.ajax({
-    url: url,
-    method: 'GET'
-  }).done(function(response){
-    // insert results to DOM
-    highlight(response.results);
-    // console.log(response.results);
-  }).fail(function(error){
-    console.log(error);
-  })
+  // loading content from API
+  // section and response parameters is required
+  loadAjax('all-sections', highlight);
+  loadAjax('sports', sports);
+  loadAjax('World', world);
 
   // filling first section
   function highlight(articles) {
     $.each(articles, function(key, value) {
       // preparing cards for first section
       if (key < cards.length) {
+
+        // published_date - day
+        // console.log(value.published_date.split("-")[2]);
 
         // loading image if media exists
         if (articles[key].media["0"]) {
@@ -105,27 +93,7 @@ $(document).ready(function() {
     });
   }
 
-  // preparing url for sports section
-  baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
-  section = 'sports';
-  timeperiod = 30;
-  url = baseurl + section + '/' + timeperiod + '.json';
-  url += '?' + $.param({
-    'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
-  });
-
-  // reading NYTimes API for sports section
-  $.ajax({
-    url: url,
-    method: 'GET'
-  }).done(function(response){
-    // insert results to DOM
-    sports(response.results);
-    // console.log(response.results);
-  }).fail(function(error){
-    console.log(error);
-  })
-
+  // filling sports section
   function sports(articles) {
     $.each(articles, function(key, value) {
         // preparing cards for first section
@@ -134,7 +102,6 @@ $(document).ready(function() {
             if (value.media["0"]) {
                 $(sportsCards[key]).find('.img-fluid')["0"].src = value.media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
             }
--
             // loading title
             // link
             $(sportsCards[key]).find('.news-title').find('a').attr('href', value.url);
@@ -149,29 +116,8 @@ $(document).ready(function() {
     })
   }
 
-
-  // preparing url for international section
-  baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
-  section = 'World';
-  timeperiod = 30;
-  url = baseurl + section + '/' + timeperiod + '.json';
-  url += '?' + $.param({
-    'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
-  });
-
-    // reading NYTimes API for sports section
-    $.ajax({
-    url: url,
-    method: 'GET'
-    }).done(function(response){
-    // insert results to DOM
-    world(response.results);
-    // console.log(response.results);
-    }).fail(function(error){
-    console.log(error);
-    })
-
-    function world(articles) {
+  // filling world section
+  function world(articles) {
         $.each(articles, function(key, value) {
             if (key < internationalCards.length) {
                 // loading image if media exists
@@ -193,3 +139,25 @@ $(document).ready(function() {
         });
     }
 });
+
+
+function loadAjax(section, responseTo) {
+    var baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
+    var timeperiod = 30;
+    var url = baseurl + section + '/' + timeperiod + '.json';
+    url += '?' + $.param({
+      'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
+    });
+
+    // reading NYTimes API
+    $.ajax({
+      url: url,
+      method: 'GET'
+    }).done(function(response){
+      // insert results to DOM
+      responseTo(response.results);
+      // console.log(response.results);
+    }).fail(function(error){
+      console.log(error);
+    })
+}

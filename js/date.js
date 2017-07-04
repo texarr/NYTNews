@@ -1,6 +1,7 @@
+var fromDayVal = 1;
+var toDayVal = 1;
+
 $(document).ready(function() {
-    var fromDayVal = 1;
-    var toDayVal = 1;
     // options from date.js
     var fromDay = $('.from-day');
     for (var i = 1; i <= 31; i++) {
