@@ -27,7 +27,7 @@ $(document).ready(function() {
 
   var baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
   var section = 'all-sections';
-  var timeperiod = 1;
+  var timeperiod = 30;
   var url = baseurl + section + '/' + timeperiod + '.json';
 
   url += '?' + $.param({
@@ -108,7 +108,7 @@ $(document).ready(function() {
   // preparing url for sports section
   baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
   section = 'sports';
-  timeperiod = 1;
+  timeperiod = 30;
   url = baseurl + section + '/' + timeperiod + '.json';
   url += '?' + $.param({
     'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
@@ -153,7 +153,7 @@ $(document).ready(function() {
   // preparing url for international section
   baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
   section = 'World';
-  timeperiod = 1;
+  timeperiod = 30;
   url = baseurl + section + '/' + timeperiod + '.json';
   url += '?' + $.param({
     'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"
