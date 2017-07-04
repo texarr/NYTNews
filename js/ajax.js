@@ -27,69 +27,84 @@ $(document).ready(function() {
 
   // loading content from API
   // section and response parameters is required
-  loadAjax('all-sections', highlight);
-  loadAjax('sports', sports);
-  loadAjax('World', world);
+  loadAjax('all-sections', highlight, 1);
+  loadAjax('sports', sports, 1);
+  loadAjax('World', world, 1);
+
+  // filter module
+  var submitBtn = $('.dayfilter').find('.btn-success');
+  var period = $('.period');
+  var periodVal = 1;
+
+  period.on('change', function() {
+      periodVal = this.value;
+  });
+
+  submitBtn.on('click', function() {
+      loadAjax('all-sections', highlight, periodVal);
+      loadAjax('sports', sports, periodVal);
+      loadAjax('World', world, periodVal);
+  });
+  // endof filter module
 
   // filling first section
   function highlight(articles) {
+    var filledCards = 0;
+    topCarousel.find('.carousel-inner').text('');
     $.each(articles, function(key, value) {
       // preparing cards for first section
-      if (key < cards.length) {
+      if (filledCards < cards.length) {
+            // loading image if media exists
+            if (articles[key].media["0"]) {
+              $(cards[key]).find('img')["0"].src = articles[key].media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
+            } else {
+              $(cards[key]).find('img')["0"].src =  " ";
+            }
 
-        // published_date - day
-        // console.log(value.published_date.split("-")[2]);
-
-        // loading image if media exists
-        if (articles[key].media["0"]) {
-          $(cards[key]).find('img')["0"].src = articles[key].media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
-        } else {
-          $(cards[key]).find('img')["0"].src =  " ";
-        }
-
-        // loading news description
-        $(cards[key]).find('.title-small').find('a').text(articles[key].title.substring(0, 45) + '...');
-        $(cards[key]).find('.title-small').find('a').attr('href', articles[key].url);
-        $(cards[key]).find('.text-time').find('em').text(articles[key].published_date);
+            // loading news description
+            $(cards[key]).find('.title-small').find('a').text(articles[key].title.substring(0, 45) + '...');
+            $(cards[key]).find('.title-small').find('a').attr('href', articles[key].url);
+            $(cards[key]).find('.text-time').find('em').text(articles[key].published_date);
+            filledCards++;
       }
 
       // carousel fill
-      if (key >= cards.length) {
-        articleSrc = articles[key].url;
+      if (filledCards >= cards.length) {
+              articleSrc = articles[key].url;
 
-        // saving image if media exists
-        if (articles[key].media["0"]) {
-          imageSrc = articles[key].media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
-        } else {
-          imageSrc = ' ';
-        }
+              // saving image if media exists
+              if (articles[key].media["0"]) {
+                imageSrc = articles[key].media["0"]["media-metadata"][value.media["0"]["media-metadata"].length-1].url;
+              } else {
+                imageSrc = '../img/no-image-icon-23.jpg';
+              }
 
-        // make new instance of carousel item
-        if (key === cards.length + 1) {
-          carouselItem = $('<div>', {class: "carousel-item active"});
-        } else {
-          carouselItem = $('<div>', {class: "carousel-item"});
-        }
+              // make new instance of carousel item
+              if (key === cards.length + 1) {
+                carouselItem = $('<div>', {class: "carousel-item active"});
+              } else {
+                carouselItem = $('<div>', {class: "carousel-item"});
+              }
 
-        newsBlock = $('<div>', {class: "news-block"});
-        newsMedia = $('<div>', {class: "news-media"});
-        newsMedia.append($('<img>', {class: "img-fluid", src: imageSrc}));
-        newsTitle = $('<div>', {class: "news-title"});
-        newsTitle.append($('<h2>', {class: "title-large"})).append($('<a>', {href: articleSrc}));
-        newsTitle.find('a').text(articles[key].title);
-        newsDescription = $('<div>', {class: "news-des"}).text(articles[key].abstract);
-        timeText = $('<div>', {class: "time-text"}).append($('<strong>'));
-        timeText.children().text(articles[key].published_date);
+              newsBlock = $('<div>', {class: "news-block"});
+              newsMedia = $('<div>', {class: "news-media"});
+              newsMedia.append($('<img>', {class: "img-fluid", src: imageSrc}));
+              newsTitle = $('<div>', {class: "news-title"});
+              newsTitle.append($('<h2>', {class: "title-large"})).append($('<a>', {href: articleSrc}));
+              newsTitle.find('a').text(articles[key].title);
+              newsDescription = $('<div>', {class: "news-des"}).text(articles[key].abstract);
+              timeText = $('<div>', {class: "time-text"}).append($('<strong>'));
+              timeText.children().text(articles[key].published_date);
 
-        newsBlock.append(newsMedia);
-        newsBlock.append(newsTitle);
-        newsBlock.append(newsDescription);
-        newsBlock.append(timeText);
-        carouselItem.append(newsBlock);
+              newsBlock.append(newsMedia);
+              newsBlock.append(newsTitle);
+              newsBlock.append(newsDescription);
+              newsBlock.append(timeText);
+              carouselItem.append(newsBlock);
 
-        topCarousel.find('.carousel-inner').append(carouselItem);
+              topCarousel.find('.carousel-inner').append(carouselItem);
+              filledCards++;
       }
-
     });
   }
 
@@ -141,9 +156,8 @@ $(document).ready(function() {
 });
 
 
-function loadAjax(section, responseTo) {
+function loadAjax(section, responseTo, timeperiod) {
     var baseurl = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/';
-    var timeperiod = 30;
     var url = baseurl + section + '/' + timeperiod + '.json';
     url += '?' + $.param({
       'api-key': "24ba32e1f1f24277873ec82b93f8d3b2"

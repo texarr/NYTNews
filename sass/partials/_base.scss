@@ -22,3 +22,26 @@
         margin: 0 auto;
     }
 }
+
+.top-nav .btn {
+    position: initial;
+}
+
+.dayfilter {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+            align-items: center;
+    margin-top: 3px;
+
+    .date {
+        margin-right: 10px;
+
+        .form-control {
+            width: auto;
+            display: inline-block;
+        }
+    }
+}

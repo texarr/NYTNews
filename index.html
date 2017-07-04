@@ -70,17 +70,16 @@
             <li class="nav-item"> <a class="nav-link" href="#international">World</a> </li>
           </ul>
           <!-- selected time -->
-          <form class="pull-xs-right">
+          <form class="pull-xs-right dayfilter">
             <div class="date">
                 <span>Select time period: </span>
-                <select class="from-day" name="from-day">
-                    <!-- options from date.js -->
-                </select>
-                <span> to: </span>
-                <select class="to-day" name="to-day">
-                    <!-- options from date.js -->
+                <select class="period form-control" name="period">
+                    <option value="1">latest</option>
+                    <option value="7">last week</option>
+                    <option value="30">last month</option>
                 </select>
             </div>
+            <button type="button" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button>
           </form>
         </div>
       </div>
